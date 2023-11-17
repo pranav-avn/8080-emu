@@ -1,4 +1,4 @@
-//TODO 0xaX, 0xbX, 0xcX, 0xdX, 0xeX, 0xfX series
+
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -526,6 +526,326 @@ int disassemble(unsigned char *buffer, int pc){
 			break;
 		case 0x9f:
 			printf("SBB\tA");
+			break;
+		case 0xa0:
+			printf("ANA\tB");
+			break;
+		case 0xa1:
+			printf("ANA\tC");
+			break;
+		case 0xa2:
+			printf("ANA\tD");
+			break;
+		case 0xa3:
+			printf("ANA\tE");
+			break;
+		case 0xa4:
+			printf("ANA\tH");
+			break;
+		case 0xa5:
+			printf("ANA\tL");
+			break;
+		case 0xa6:
+			printf("ANA\tM");
+			break;
+		case 0xa7:
+			printf("ANA\tA");
+			break;
+		case 0xa8:
+			printf("XRA\tB");
+			break;
+		case 0xa9:
+			printf("XRA\tC");
+			break;
+		case 0xaa:
+			printf("XRA\tD");
+			break;
+		case 0xab:
+			printf("XRA\tE");
+			break;
+		case 0xac:
+			printf("XRA\tH");
+			break;
+		case 0xad:
+			printf("XRA\tL");
+			break;
+		case 0xae:
+			printf("XRA\tM");
+			break;
+		case 0xaf:
+			printf("XRA\tA");
+			break;
+		case 0xb0:
+			printf("ORA\tB");
+			break;
+		case 0xb1:
+			printf("ORA\tC");
+			break;
+		case 0xb2:
+			printf("ORA\tD");
+			break;
+		case 0xb3:
+			printf("ORA\tE");
+			break;
+		case 0xb4:
+			printf("ORA\tH");
+			break;
+		case 0xb5:
+			printf("ORA\tL");
+			break;
+		case 0xb6:
+			printf("ORA\tM");
+			break;
+		case 0xb7:
+			printf("ORA\tA");
+			break;
+		case 0xb8:
+			printf("CMP\tB");
+			break;
+		case 0xb9:
+			printf("CMP\tC");
+			break;
+		case 0xba:
+			printf("CMP\tD");
+			break;
+		case 0xbb:
+			printf("CMP\tE");
+			break;
+		case 0xbc:
+			printf("CMP\tH");
+			break;
+		case 0xbd:
+			printf("CMP\tL");
+			break;
+		case 0xbe:
+			printf("CMP\tM");
+			break;
+		case 0xbf:
+			printf("CMP\tA");
+			break;
+		case 0xc0:
+			printf("RNZ");
+			break;
+		case 0xc1:
+			printf("POP\tB");
+			break;
+		case 0xc2:
+			printf("JNZ\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xc3:
+			printf("JMP\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xc4:
+			printf("CNZ\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xc5:
+			printf("PUSH\tB");
+			break;
+		case 0xc6:
+			printf("ADI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xc7:
+			printf("RST\t0");
+			break;
+		case 0xc8:
+			printf("RZ");
+			break;
+		case 0xc9:
+			printf("RET");
+			break;
+		case 0xca:
+			printf("JZ\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xcb:
+			printf("JMP\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xcc:
+			printf("CZ\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xcd:
+			printf("CALL\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xce:
+			printf("ACI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xcf:
+			printf("RST\t1");
+			break;
+		case 0xd0:
+			printf("RNC");
+			break;
+		case 0xd1:
+			printf("POP\tD");
+			break;
+		case 0xd2:
+			printf("JNC\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xd3:
+			printf("OUT\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xd4:
+			printf("CNC\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xd5:
+			printf("PUSH   D");
+			break;
+		case 0xd6:
+			printf("SUI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xd7:
+			printf("RST\t2");
+			break;
+		case 0xd8:
+			printf("RC");
+			break;
+		case 0xd9:
+			printf("RET");
+			break;
+		case 0xda:
+			printf("JC\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xdb:
+			printf("IN\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xdc:
+			printf("CC\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xdd:
+			printf("CALL\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xde:
+			printf("SBI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xdf:
+			printf("RST\t3");
+			break;
+		case 0xe0:
+			printf("RPO");
+			break;
+		case 0xe1:
+			printf("POP\tH");
+			break;
+		case 0xe2:
+			printf("JPO\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xe3:
+			printf("XTHL");
+			break;
+		case 0xe4:
+			printf("CPO\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xe5:
+			printf("PUSH\tH");
+			break;
+		case 0xe6:
+			printf("ANI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xe7:
+			printf("RST\t4");
+			break;
+		case 0xe8:
+			printf("RPE");
+			break;
+		case 0xe9:
+			printf("PCHL");
+			break;
+		case 0xea:
+			printf("JPE\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xeb:
+			printf("XCHG");
+			break;
+		case 0xec:
+			printf("CPE\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xed:
+			printf("CALL\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xee:
+			printf("XRI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xef:
+			printf("RST\t5");
+			break;
+		case 0xf0:
+			printf("RP");
+			break;
+		case 0xf1:
+			printf("POP\tPSW");
+			break;
+		case 0xf2:
+			printf("JP\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xf3:
+			printf("DI");
+			break;
+		case 0xf4:
+			printf("CP\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xf5:
+			printf("PUSH\tPSW");
+			break;
+		case 0xf6:
+			printf("ORI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xf7:
+			printf("RST\t6");
+			break;
+		case 0xf8:
+			printf("RM");
+			break;
+		case 0xf9:
+			printf("SPHL");
+			break;
+		case 0xfa:
+			printf("JM\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xfb:
+			printf("EI");
+			break;
+		case 0xfc:
+			printf("CM\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xfd:
+			printf("CALL\t$%02x%02x", opcode[2], opcode[1]);
+			opbytes = 3;
+			break;
+		case 0xfe:
+			printf("CPI\t#$%02x", opcode[1]);
+			opbytes = 2;
+			break;
+		case 0xff:
+			printf("RST\t7");
 			break;
 		
 
