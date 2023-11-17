@@ -239,6 +239,102 @@ int disassemble(unsigned char *buffer, int pc){
 		case 0x3f:
 			printf("CMC");
 			break;
+		case 0x40:
+			printf("MOV\tB,B");
+			break;
+		case 0x41:
+			printf("MOV\tB,C");
+			break;
+		case 0x42:
+			printf("MOV\tB,D");
+			break;
+		case 0x43:
+			printf("MOV\tB,E");
+			break;
+		case 0x44:
+			printf("MOV\tB,H");
+			break;
+		case 0x45:
+			printf("MOV\tB,L");
+			break;
+		case 0x46:
+			printf("MOV\tB,M");
+			break;
+		case 0x47:
+			printf("MOV\tB,A");
+			break;
+		case 0x48:
+			printf("MOV\tC,B");
+			break;
+		case 0x49:
+			printf("MOV\tC,C");
+			break;
+		case 0x4a:
+			printf("MOV\tC,D");
+			break;
+		case 0x4b:
+			printf("MOV\tC,E");
+			break;
+		case 0x4c:
+			printf("MOV\tC,F");
+			break;
+		case 0x4d:
+			printf("MOV\tC,L");
+			break;
+		case 0x4e:
+			printf("MOV\tC,M");
+			break;
+		case 0x4f:
+			printf("MOV\tC,A");
+			break;
+		case 0x50:
+			printf("MOV\tD,B");
+			break;
+		case 0x51:
+			printf("MOV\tD,C");
+			break;
+		case 0x52:
+			printf("MOV\tD,D");
+			break;
+		case 0x53:
+			printf("MOV\tD,E");
+			break;
+		case 0x54:
+			printf("MOV\tD,H");
+			break;
+		case 0x55:
+			printf("MOV\tD,L");
+			break;
+		case 0x56:
+			printf("MOV\tD,M");
+			break;
+		case 0x57:
+			printf("MOV\tD,A");
+			break;
+		case 0x58:
+			printf("MOV\tE,B");
+			break;
+		case 0x59:
+			printf("MOV\tE,C");
+			break;
+		case 0x5a:
+			printf("MOV\tE,D");
+			break;
+		case 0x5b:
+			printf("MOV\tE,E");
+			break;
+		case 0x5c:
+			printf("MOV\tE,H");
+			break;
+		case 0x5d:
+			printf("MOV\tE,L");
+			break;
+		case 0x5e:
+			printf("MOV\tE,M");
+			break;
+		case 0x5f:
+			printf("MOV\tE,A");
+			break;
 		
 
 
