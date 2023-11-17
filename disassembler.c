@@ -1,4 +1,4 @@
-//TODO 0x4X, 0x5X, 0x6X, 0x7X, 0x8X, 0x9X, 0xaX, 0xbX, 0xcX, 0xdX, 0xeX, 0xfX series
+//TODO 0xaX, 0xbX, 0xcX, 0xdX, 0xeX, 0xfX series
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -144,7 +144,7 @@ int disassemble(unsigned char *buffer, int pc){
 			opbytes = 3;
 			break;
 		case 0x22:
-			printf("SHLD\tadr");
+			printf("SHLD\t$%02x%02x", opcode[2], opcode[1]);
 			opbytes = 3;
 			break;
 		case 0x23:
@@ -169,7 +169,7 @@ int disassemble(unsigned char *buffer, int pc){
 			printf("DAD\tH");
 			break;
 		case 0x2a:
-			printf("LHLD\tadr");
+			printf("LHLD\t$%02x%02x", opcode[2], opcode[1]);
 			opbytes = 3;
 			break;
 		case 0x2b:
@@ -195,7 +195,7 @@ int disassemble(unsigned char *buffer, int pc){
 			opbytes = 3;
 			break;
 		case 0x32:
-			printf("STA\tadr");
+			printf("STA\t$%02x%02x", opcode[2], opcode[1]);
 			opbytes = 3;
 			break;	
 		case 0x33:
@@ -220,7 +220,7 @@ int disassemble(unsigned char *buffer, int pc){
 			printf("DAD\tSP");
 			break;
 		case 0x3a:
-			printf("LDA\tadr");
+			printf("LDA\t$%02x%02x", opcode[2], opcode[1]);
 			opbytes = 3;
 			break;
 		case 0x3b:
@@ -334,6 +334,198 @@ int disassemble(unsigned char *buffer, int pc){
 			break;
 		case 0x5f:
 			printf("MOV\tE,A");
+			break;
+		case 0x60:
+			printf("MOV\tH,B");
+			break;
+		case 0x61:
+			printf("MOV\tH,C");
+			break;
+		case 0x62:
+			printf("MOV\tH,D");
+			break;
+		case 0x63:
+			printf("MOV\tH.E");
+			break;
+		case 0x64:
+			printf("MOV\tH,H");
+			break;
+		case 0x65:
+			printf("MOV\tH,L");
+			break;
+		case 0x66:
+			printf("MOV\tH,M");
+			break;
+		case 0x67:
+			printf("MOV\tH,A");
+			break;
+		case 0x68:
+			printf("MOV\tL,B");
+			break;
+		case 0x69:
+			printf("MOV\tL,C");
+			break;
+		case 0x6a:
+			printf("MOV\tL,D");
+			break;
+		case 0x6b:
+			printf("MOV\tL,E");
+			break;
+		case 0x6c:
+			printf("MOV\tL,H");
+			break;
+		case 0x6d:
+			printf("MOV\tL,L");
+				break;
+		case 0x6e:
+			printf("MOV\tL,M");
+			break;
+		case 0x6f:
+			printf("MOV\tL,A");
+			break;
+		case 0x70:
+			printf("MOV\tM,B");
+			break;
+		case 0x71:
+			printf("MOV\tM,C");
+			break;
+		case 0x72:
+			printf("MOV\tM,D");
+			break;
+		case 0x73:
+			printf("MOV\tM.E");
+			break;
+		case 0x74:
+			printf("MOV\tM,H");
+			break;
+		case 0x75:
+			printf("MOV\tM,L");
+			break;
+		case 0x76:
+			printf("HLT");
+			break;
+		case 0x77:
+			printf("MOV\tM,A");
+			break;
+		case 0x78:
+			printf("MOV\tA,B");
+			break;
+		case 0x79:
+			printf("MOV\tA,C");
+			break;
+		case 0x7a:
+			printf("MOV\tA,D");
+			break;
+		case 0x7b:
+			printf("MOV\tA,E");
+			break;
+		case 0x7c:
+			printf("MOV\tA,H");
+			break;
+		case 0x7d:
+			printf("MOV\tA,L");
+			break;
+		case 0x7e:
+			printf("MOV\tA,M");
+			break;
+		case 0x7f:
+			printf("MOV\tA,A");
+			break;
+		case 0x80:
+			printf("ADD\tB");
+			break;
+		case 0x81:
+			printf("ADD\tC");
+			break;
+		case 0x82:
+			printf("ADD\tD");
+			break;
+		case 0x83:
+			printf("ADD\tE");
+			break;
+		case 0x84:
+			printf("ADD\tH");
+			break;
+		case 0x85:
+			printf("ADD\tL");
+			break;
+		case 0x86:
+			printf("ADD\tM");
+			break;
+		case 0x87:
+			printf("ADD\tA");
+			break;
+		case 0x88:
+			printf("ADC\tB");
+			break;
+		case 0x89:
+			printf("ADC\tC");
+			break;
+		case 0x8a:
+			printf("ADC\tD");
+			break;
+		case 0x8b:
+			printf("ADC\tE");
+			break;
+		case 0x8c:
+			printf("ADC\tH");
+			break;
+		case 0x8d:
+			printf("ADC\tL");
+			break;
+		case 0x8e:
+			printf("ADC\tM");
+			break;
+		case 0x8f:
+			printf("ADC\tA");
+			break;
+		case 0x90:
+			printf("SUB\tB");
+			break;
+		case 0x91:
+			printf("SUB\tC");
+			break;
+		case 0x92:
+			printf("SUB\tD");
+			break;
+		case 0x93:
+			printf("SUB\tE");
+			break;
+		case 0x94:
+			printf("SUB\tH");
+			break;
+		case 0x95:
+			printf("SUB\tL");
+			break;
+		case 0x96:
+			printf("SUB\tM");
+			break;
+		case 0x97:
+			printf("SUB\tA");
+			break;
+		case 0x98:
+			printf("SBB\tB");
+			break;
+		case 0x99:
+			printf("SBB\tC");
+			break;
+		case 0x9a:
+			printf("SBB\tD");
+			break;
+		case 0x9b:
+			printf("SBB\tE");
+			break;
+		case 0x9c:
+			printf("SBB\tH");
+			break;
+		case 0x9d:
+			printf("SBB\tL");
+			break;
+		case 0x9e:
+			printf("SBB\tM");
+			break;
+		case 0x9f:
+			printf("SBB\tA");
 			break;
 		
 
