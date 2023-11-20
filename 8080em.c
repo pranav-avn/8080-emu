@@ -50,39 +50,89 @@ int Emulate8080p(State8080 *state) {
     state->a = state->b;
     state->pc++;
   } break;
-  case 0x03:
-    unimplementedInst(state);
-    break;
-  case 0x04:
-    unimplementedInst(state);
-    break;
-  case 0x05:
-    unimplementedInst(state);
-    break;
-  case 0x06:
-    unimplementedInst(state);
-    break;
-  case 0x07:
-    unimplementedInst(state);
-    break;
+  case 0x03: // INX  B
+  {
+    uint16_t bc = (state->b << 8) | (state->c);
+    bc++;
+    state->b = (bc & 0xff00) >> 8;
+    state->c = bc & 0xff;
+  } break;
+  case 0x04: // INR  B
+  {
+    uint8_t answer = state->b + 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->b = answer;
+  } break;
+  case 0x05: // DCR B
+  {
+    uint8_t answer = state->b - 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->b = answer;
+  } break;
+  case 0x06: // MVI  B, D8
+  {
+    state->b = opcode[1];
+    state->pc++;
+  } break;
+  case 0x07: // RLC
+  {
+    uint16_t ac = (uint16_t)state->a;
+    ac = ac << 1;
+    uint16_t carry = (ac & 0x100);
+    if (carry) {
+      ac = 0x100 + ac;
+      ac = ac & 0xff;
+      ac++;
+    } else {
+      ac = 0x100 + ac;
+      ac = ac & 0xff;
+    }
+  } break;
   case 0x08:
-    unimplementedInst(state);
     break;
-  case 0x09:
-    unimplementedInst(state);
-    break;
+  case 0x09: // DAD  B
+  {
+    uint32_t hl = (state->h << 8) | state->l;
+    uint32_t bc = (state->b << 8) | state->c;
+    uint32_t res = hl + bc;
+    state->h = (res & 0xff00) >> 8;
+    state->l = res & 0xff;
+    state->cc.cy = ((res & 0xffff0000) > 0);
+  } break;
   case 0x0a:
     unimplementedInst(state);
     break;
-  case 0x0b:
-    unimplementedInst(state);
-    break;
-  case 0x0c:
-    unimplementedInst(state);
-    break;
-  case 0x0d:
-    unimplementedInst(state);
-    break;
+  case 0x0b: // DCX  B
+  {
+    uint16_t bc = (state->b << 8) | (state->c);
+    bc--;
+    state->b = (bc & 0xff00) >> 8;
+    state->c = bc & 0xff;
+  } break;
+  case 0x0c: // INR  C
+  {
+    uint8_t answer = state->c + 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->c = answer;
+  } break;
+  case 0x0d: // DCR  C
+  {
+    uint8_t answer = state->c - 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->c = answer;
+  } break;
   case 0x0e:
     unimplementedInst(state);
     break;
@@ -98,15 +148,31 @@ int Emulate8080p(State8080 *state) {
   case 0x12:
     unimplementedInst(state);
     break;
-  case 0x13:
-    unimplementedInst(state);
-    break;
-  case 0x14:
-    unimplementedInst(state);
-    break;
-  case 0x15:
-    unimplementedInst(state);
-    break;
+  case 0x13: // INX  D
+  {
+    uint16_t de = (state->d << 8) | (state->e);
+    de++;
+    state->d = (de & 0xff00) >> 8;
+    state->e = de & 0xff;
+  } break;
+  case 0x14: // INR  D
+  {
+    uint8_t answer = state->d + 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->d = answer;
+  } break;
+  case 0x15: // DCR  D
+  {
+    uint8_t answer = state->d - 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->d = answer;
+  } break;
   case 0x16:
     unimplementedInst(state);
     break;
@@ -125,12 +191,24 @@ int Emulate8080p(State8080 *state) {
   case 0x1b:
     unimplementedInst(state);
     break;
-  case 0x1c:
-    unimplementedInst(state);
-    break;
-  case 0x1d:
-    unimplementedInst(state);
-    break;
+  case 0x1c: // INR E
+  {
+    uint8_t answer = state->e + 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->e = answer;
+  } break;
+  case 0x1d: // DCR  E
+  {
+    uint8_t answer = state->e - 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->e = answer;
+  } break;
   case 0x1e:
     unimplementedInst(state);
     break;
@@ -146,15 +224,31 @@ int Emulate8080p(State8080 *state) {
   case 0x22:
     unimplementedInst(state);
     break;
-  case 0x23:
-    unimplementedInst(state);
-    break;
-  case 0x24:
-    unimplementedInst(state);
-    break;
-  case 0x25:
-    unimplementedInst(state);
-    break;
+  case 0x23: // INX  H
+  {
+    uint16_t hl = (state->h << 8) | (state->l);
+    hl++;
+    state->h = (hl & 0xff00) >> 8;
+    state->l = hl & 0xff;
+  } break;
+  case 0x24: // INR  H
+  {
+    uint8_t answer = state->h + 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->h = answer;
+  } break;
+  case 0x25: // DCR  H
+  {
+    uint8_t answer = state->h - 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->h = answer;
+  } break;
   case 0x26:
     unimplementedInst(state);
     break;
@@ -173,12 +267,24 @@ int Emulate8080p(State8080 *state) {
   case 0x2b:
     unimplementedInst(state);
     break;
-  case 0x2c:
-    unimplementedInst(state);
-    break;
-  case 0x2d:
-    unimplementedInst(state);
-    break;
+  case 0x2c: // INR  L
+  {
+    uint8_t answer = state->l + 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->l = answer;
+  } break;
+  case 0x2d: // DCR  L
+  {
+    uint8_t answer = state->l - 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->l = answer;
+  } break;
   case 0x2e:
     unimplementedInst(state);
     break;
@@ -194,18 +300,38 @@ int Emulate8080p(State8080 *state) {
   case 0x32:
     unimplementedInst(state);
     break;
-  case 0x33:
-    unimplementedInst(state);
+  case 0x33: // INX  SP
+    state->sp++;
     break;
-  case 0x34:
-    unimplementedInst(state);
-    break;
-  case 0x35:
-    unimplementedInst(state);
-    break;
-  case 0x36:
-    unimplementedInst(state);
-    break;
+  case 0x34: // INR  M
+  {
+    uint16_t offset = (state->h << 8) | (state->l);
+    uint16_t answer = state->memory[offset];
+    answer++;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->memory[offset] = answer;
+  } break;
+  case 0x35: // DCR  M
+  {
+    uint16_t offset = (state->h << 8) | (state->l);
+    uint16_t answer = state->memory[offset];
+    answer--;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->memory[offset] = answer;
+  } break;
+  case 0x36: // MVI  M, byte
+  {
+    // AC set if lower nibble of h was zero prior to dec
+    uint16_t offset = (state->h << 8) | state->l;
+    state->memory[offset] = opcode[1];
+    state->pc++;
+  } break;
   case 0x37:
     unimplementedInst(state);
     break;
@@ -221,9 +347,15 @@ int Emulate8080p(State8080 *state) {
   case 0x3b:
     unimplementedInst(state);
     break;
-  case 0x3c:
-    unimplementedInst(state);
-    break;
+  case 0x3c: // INR A
+  {
+    uint8_t answer = state->a + 1;
+    state->cc.z = (answer == 0);
+    state->cc.s = (0x80 == (answer & 0x80));
+    state->cc.ac = (answer > 0xf);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer;
+  } break;
   case 0x3d:
     unimplementedInst(state);
     break;
@@ -588,57 +720,170 @@ int Emulate8080p(State8080 *state) {
     state->cc.p = Parity(answer & 0xff);
     state->a = answer & 0xff;
   } break;
-  case 0x8f:
-    unimplementedInst(state);
-    break;
-  case 0x90:
-    unimplementedInst(state);
-    break;
-  case 0x91:
-    unimplementedInst(state);
-    break;
-  case 0x92:
-    unimplementedInst(state);
-    break;
-  case 0x93:
-    unimplementedInst(state);
-    break;
-  case 0x94:
-    unimplementedInst(state);
-    break;
-  case 0x95:
-    unimplementedInst(state);
-    break;
-  case 0x96:
-    unimplementedInst(state);
-    break;
-  case 0x97:
-    unimplementedInst(state);
-    break;
-  case 0x98:
-    unimplementedInst(state);
-    break;
-  case 0x99:
-    unimplementedInst(state);
-    break;
-  case 0x9a:
-    unimplementedInst(state);
-    break;
-  case 0x9b:
-    unimplementedInst(state);
-    break;
-  case 0x9c:
-    unimplementedInst(state);
-    break;
-  case 0x9d:
-    unimplementedInst(state);
-    break;
-  case 0x9e:
-    unimplementedInst(state);
-    break;
-  case 0x9f:
-    unimplementedInst(state);
-    break;
+  case 0x8f: // ADC  A
+  {
+    uint16_t answer =
+        (uint16_t)state->a + (uint16_t)state->a + (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x90: // SUB  B
+  {
+    uint16_t answer = (uint16_t)state->a - (uint16_t)state->b;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x91: // SUB  C
+  {
+    uint16_t answer = (uint16_t)state->a - (uint16_t)state->c;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x92: // SUB  D
+  {
+    uint16_t answer = (uint16_t)state->a - (uint16_t)state->d;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x93: // SUB  E
+  {
+    uint16_t answer = (uint16_t)state->a - (uint16_t)state->e;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x94: // SUB  H
+  {
+    uint16_t answer = (uint16_t)state->a - (uint16_t)state->h;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x95: // SUB  L
+  {
+    uint16_t answer = (uint16_t)state->a - (uint16_t)state->l;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x96: // SUB  M
+  {
+    uint16_t offset = (state->h << 8) | (state->l);
+    uint16_t answer = (uint16_t)state->a - state->memory[offset];
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x97: // SUB  A
+  {
+    uint16_t answer = (uint16_t)state->a - (uint16_t)state->a;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x98: // SBB  B
+  {
+    uint16_t answer =
+        (uint16_t)state->a - (uint16_t)state->b - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x99: // SBB  C
+  {
+    uint16_t answer =
+        (uint16_t)state->a - (uint16_t)state->c - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x9a: // SBB  D
+  {
+    uint16_t answer =
+        (uint16_t)state->a - (uint16_t)state->d - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x9b: // SBB  E
+  {
+    uint16_t answer =
+        (uint16_t)state->a - (uint16_t)state->e - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x9c: // SBB  H
+  {
+    uint16_t answer =
+        (uint16_t)state->a - (uint16_t)state->h - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x9d: // SBB  L
+  {
+    uint16_t answer =
+        (uint16_t)state->a - (uint16_t)state->l - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x9e: // SBB  M
+  {
+    uint16_t offset = (state->h << 8) | (state->l);
+    uint16_t answer =
+        (uint16_t)state->a - state->memory[offset] - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
+  case 0x9f: // SBB  A
+  {
+    uint16_t answer =
+        (uint16_t)state->a - (uint16_t)state->a - (uint16_t)state->cc.cy;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = Parity(answer & 0xff);
+    state->a = answer & 0xff;
+  } break;
   case 0xa0:
     unimplementedInst(state);
     break;
