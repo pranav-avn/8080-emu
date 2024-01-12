@@ -31,7 +31,7 @@ void unimplementedInst(State8080 *state) {
   exit(1);
 }
 
-int Parity(int x) { return 0; }
+int Parity(int x) { return 0; } // to be implemented
 
 int Emulate8080p(State8080 *state) {
   unsigned char *opcode = &state->memory[state->pc];
@@ -105,9 +105,12 @@ int Emulate8080p(State8080 *state) {
     state->l = res & 0xff;
     state->cc.cy = ((res & 0xffff0000) > 0);
   } break;
-  case 0x0a:
-    unimplementedInst(state);
-    break;
+  case 0x0a: // LDAX B
+  {
+    state->a = state->c;
+    state->a = state->b;
+    state->pc++;
+  } break;
   case 0x0b: // DCX  B
   {
     uint16_t bc = (state->b << 8) | (state->c);
@@ -980,17 +983,24 @@ int Emulate8080p(State8080 *state) {
   case 0xbf:
     unimplementedInst(state);
     break;
-  case 0xc0:
-    unimplementedInst(state);
+  case 0xc0: // RNZ
+    if (0 == state->cc.z) {
+      state->pc =
+          state->memory[state->sp] | (state->memory[state->sp + 1] << 8);
+      state->sp += 2;
+    }
     break;
   case 0xc1:
     unimplementedInst(state);
     break;
-  case 0xc2:
-    unimplementedInst(state);
+  case 0xc2: // JNZ  adr
+    if (0 == state->cc.z)
+      state->pc = (opcode[2] << 8) | opcode[1];
+    else
+      state->pc += 2;
     break;
-  case 0xc3:
-    unimplementedInst(state);
+  case 0xc3: // JMP adr
+    state->pc = (opcode[2] << 8) | opcode[1];
     break;
   case 0xc4:
     unimplementedInst(state);
@@ -1007,8 +1017,9 @@ int Emulate8080p(State8080 *state) {
   case 0xc8:
     unimplementedInst(state);
     break;
-  case 0xc9:
-    unimplementedInst(state);
+  case 0xc9: // RZ
+    state->pc = state->memory[state->sp] | (state->memory[state->sp + 1] << 8);
+    state->sp += 2;
     break;
   case 0xca:
     unimplementedInst(state);
@@ -1019,9 +1030,13 @@ int Emulate8080p(State8080 *state) {
   case 0xcc:
     unimplementedInst(state);
     break;
-  case 0xcd:
-    unimplementedInst(state);
-    break;
+  case 0xcd: { // CALL adr
+    uint16_t ret = state->pc + 2;
+    state->memory[state->sp - 1] = (ret >> 8) & 0xff;
+    state->memory[state->sp - 2] = (ret & 0xff);
+    state->sp = state->sp - 2;
+    state->pc = (opcode[2] << 8) | opcode[1];
+  } break;
   case 0xce:
     unimplementedInst(state);
     break;
