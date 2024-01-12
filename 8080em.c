@@ -1002,8 +1002,15 @@ int Emulate8080p(State8080 *state) {
   case 0xc3: // JMP adr
     state->pc = (opcode[2] << 8) | opcode[1];
     break;
-  case 0xc4:
-    unimplementedInst(state);
+  case 0xc4: // CNZ adr
+    if (0 == state->cc.z) {
+      uint16_t ret = state->pc + 2;
+      state->memory[state->sp - 1] = (ret >> 8) & 0xff;
+      state->memory[state->sp - 2] = (ret & 0xff);
+      state->sp = state->sp - 2;
+      state->pc = (opcode[2] << 8) | opcode[1];
+    } else
+      state->pc += 2;
     break;
   case 0xc5:
     unimplementedInst(state);
@@ -1011,13 +1018,17 @@ int Emulate8080p(State8080 *state) {
   case 0xc6:
     unimplementedInst(state);
     break;
-  case 0xc7:
+  case 0xc7: // RST 0
     unimplementedInst(state);
     break;
-  case 0xc8:
-    unimplementedInst(state);
+  case 0xc8: // RZ
+    if (1 == state->cc.z) {
+      state->pc =
+          state->memory[state->sp] | (state->memory[state->sp + 1] << 8);
+      state->sp += 2;
+    }
     break;
-  case 0xc9: // RZ
+  case 0xc9: // RET
     state->pc = state->memory[state->sp] | (state->memory[state->sp + 1] << 8);
     state->sp += 2;
     break;
