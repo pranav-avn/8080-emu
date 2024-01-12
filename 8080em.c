@@ -31,7 +31,16 @@ void unimplementedInst(State8080 *state) {
   exit(1);
 }
 
-int Parity(int x) { return 0; } // to be implemented
+int Parity(int x, int size) {
+  int p = 0;
+  x = (x & ((1 << size) - 1));
+  for (int i = 0; i < size; i++) {
+    if (x & 0x1)
+      p++;
+    x = x >> 1;
+  }
+  return (0 == (p & 0x1));
+}
 
 int Emulate8080p(State8080 *state) {
   unsigned char *opcode = &state->memory[state->pc];
@@ -63,7 +72,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->b = answer;
   } break;
   case 0x05: // DCR B
@@ -72,7 +81,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->b = answer;
   } break;
   case 0x06: // MVI  B, D8
@@ -124,7 +133,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->c = answer;
   } break;
   case 0x0d: // DCR  C
@@ -133,7 +142,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->c = answer;
   } break;
   case 0x0e:
@@ -164,7 +173,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->d = answer;
   } break;
   case 0x15: // DCR  D
@@ -173,7 +182,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->d = answer;
   } break;
   case 0x16:
@@ -200,7 +209,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->e = answer;
   } break;
   case 0x1d: // DCR  E
@@ -209,7 +218,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->e = answer;
   } break;
   case 0x1e:
@@ -240,7 +249,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->h = answer;
   } break;
   case 0x25: // DCR  H
@@ -249,7 +258,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->h = answer;
   } break;
   case 0x26:
@@ -276,7 +285,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->l = answer;
   } break;
   case 0x2d: // DCR  L
@@ -285,7 +294,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->l = answer;
   } break;
   case 0x2e:
@@ -314,7 +323,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->memory[offset] = answer;
   } break;
   case 0x35: // DCR  M
@@ -325,7 +334,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->memory[offset] = answer;
   } break;
   case 0x36: // MVI  M, byte
@@ -356,7 +365,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = (answer == 0);
     state->cc.s = (0x80 == (answer & 0x80));
     state->cc.ac = (answer > 0xf);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer;
   } break;
   case 0x3d:
@@ -584,7 +593,7 @@ int Emulate8080p(State8080 *state) {
       state->cc.cy = 0;
 
     // Parity
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
 
     state->a = answer & 0xff;
   } break;
@@ -594,7 +603,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x82: // ADD    D
@@ -603,7 +612,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x83: // ADD E
@@ -612,7 +621,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x84: // ADD    H
@@ -621,7 +630,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x85: // ADD    L
@@ -630,7 +639,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x86: // ADD    M
@@ -640,7 +649,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x87: // ADD    A
@@ -649,7 +658,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x88: // ADC  B
@@ -659,7 +668,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x89: // ADC  C
@@ -669,7 +678,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x8a: // ADC  D
@@ -679,7 +688,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x8b: // ADC  E
@@ -689,7 +698,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x8c: // ADC  H
@@ -699,7 +708,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x8d: // ADC  L
@@ -709,7 +718,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x8e: // ADC  M
@@ -720,7 +729,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x8f: // ADC  A
@@ -730,7 +739,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x90: // SUB  B
@@ -739,7 +748,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x91: // SUB  C
@@ -748,7 +757,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x92: // SUB  D
@@ -757,7 +766,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x93: // SUB  E
@@ -766,7 +775,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x94: // SUB  H
@@ -775,7 +784,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x95: // SUB  L
@@ -784,7 +793,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x96: // SUB  M
@@ -794,7 +803,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x97: // SUB  A
@@ -803,7 +812,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x98: // SBB  B
@@ -813,7 +822,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x99: // SBB  C
@@ -823,7 +832,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x9a: // SBB  D
@@ -833,7 +842,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x9b: // SBB  E
@@ -843,7 +852,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x9c: // SBB  H
@@ -853,7 +862,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x9d: // SBB  L
@@ -863,7 +872,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x9e: // SBB  M
@@ -874,7 +883,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0x9f: // SBB  A
@@ -884,7 +893,7 @@ int Emulate8080p(State8080 *state) {
     state->cc.z = ((answer & 0xff) == 0);
     state->cc.s = ((answer & 0x80) != 0);
     state->cc.cy = (answer > 0xff);
-    state->cc.p = Parity(answer & 0xff);
+    state->cc.p = Parity(answer, 8);
     state->a = answer & 0xff;
   } break;
   case 0xa0:
@@ -1019,8 +1028,13 @@ int Emulate8080p(State8080 *state) {
     unimplementedInst(state);
     break;
   case 0xc7: // RST 0
-    unimplementedInst(state);
-    break;
+  {
+    uint16_t ret = state->pc + 2;
+    state->memory[state->sp - 1] = (ret >> 8) & 0xff;
+    state->memory[state->sp - 2] = (ret & 0xff);
+    state->sp = state->sp - 2;
+    state->pc = 0x00;
+  } break;
   case 0xc8: // RZ
     if (1 == state->cc.z) {
       state->pc =
@@ -1032,14 +1046,24 @@ int Emulate8080p(State8080 *state) {
     state->pc = state->memory[state->sp] | (state->memory[state->sp + 1] << 8);
     state->sp += 2;
     break;
-  case 0xca:
+  case 0xca: // JZ adr
+    if (1 == state->cc.z)
+      state->pc = (opcode[2] << 8) | opcode[1];
+    else
+      state->pc += 2;
+    break;
+  case 0xcb: //????
     unimplementedInst(state);
     break;
-  case 0xcb:
-    unimplementedInst(state);
-    break;
-  case 0xcc:
-    unimplementedInst(state);
+  case 0xcc: // CZ adr
+    if (1 == state->cc.z) {
+      uint16_t ret = state->pc + 2;
+      state->memory[state->sp - 1] = (ret >> 8) & 0xff;
+      state->memory[state->sp - 2] = (ret & 0xff);
+      state->sp = state->sp - 2;
+      state->pc = (opcode[2] << 8) | opcode[1];
+    } else
+      state->pc += 2;
     break;
   case 0xcd: { // CALL adr
     uint16_t ret = state->pc + 2;
@@ -1051,11 +1075,20 @@ int Emulate8080p(State8080 *state) {
   case 0xce:
     unimplementedInst(state);
     break;
-  case 0xcf:
-    unimplementedInst(state);
-    break;
-  case 0xd0:
-    unimplementedInst(state);
+  case 0xcf: // RST 1
+  {
+    uint16_t ret = state->pc + 2;
+    state->memory[state->sp - 1] = (ret >> 8) & 0xff;
+    state->memory[state->sp - 2] = (ret & 0xff);
+    state->sp = state->sp - 2;
+    state->pc = 0x08;
+  } break;
+  case 0xd0: // RNC
+    if (0 == state->cc.cy) {
+      state->pc =
+          state->memory[state->sp] | (state->memory[state->sp + 1] << 8);
+      state->sp += 2;
+    }
     break;
   case 0xd1:
     unimplementedInst(state);
@@ -1066,8 +1099,15 @@ int Emulate8080p(State8080 *state) {
   case 0xd3:
     unimplementedInst(state);
     break;
-  case 0xd4:
-    unimplementedInst(state);
+  case 0xd4: // CNC adr
+    if (0 == state->cc.cy) {
+      uint16_t ret = state->pc + 2;
+      state->memory[state->sp - 1] = (ret >> 8) & 0xff;
+      state->memory[state->sp - 2] = (ret & 0xff);
+      state->sp = state->sp - 2;
+      state->pc = 0x00;
+    } else
+      state->pc += 2;
     break;
   case 0xd5:
     unimplementedInst(state);
@@ -1078,8 +1118,12 @@ int Emulate8080p(State8080 *state) {
   case 0xd7:
     unimplementedInst(state);
     break;
-  case 0xd8:
-    unimplementedInst(state);
+  case 0xd8: // RC
+    if (1 == state->cc.cy) {
+      state->pc =
+          state->memory[state->sp] | (state->memory[state->sp + 1] << 8);
+      state->sp += 2;
+    }
     break;
   case 0xd9:
     unimplementedInst(state);
@@ -1090,8 +1134,15 @@ int Emulate8080p(State8080 *state) {
   case 0xdb:
     unimplementedInst(state);
     break;
-  case 0xdc:
-    unimplementedInst(state);
+  case 0xdc: // CC adr
+    if (1 == state->cc.cy) {
+      uint16_t ret = state->pc + 2;
+      state->memory[state->sp - 1] = (ret >> 8) & 0xff;
+      state->memory[state->sp - 2] = (ret & 0xff);
+      state->sp = state->sp - 2;
+      state->pc = 0x00;
+    } else
+      state->pc += 2;
     break;
   case 0xdd:
     unimplementedInst(state);
